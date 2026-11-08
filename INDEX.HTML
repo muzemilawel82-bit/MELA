@@ -1,0 +1,3235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MELA (መላ) · Ethiopian Grade 12 AI Educational Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Ethiopic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-base: #0a0f0d;
+    --bg-surface: #111a16;
+    --bg-surface-elevated: #16241e;
+    --bg-surface-card: #182821;
+    --border: #223b30;
+    --border-light: #2d4f40;
+    
+    --primary: #10b981;
+    --primary-hover: #059669;
+    --primary-dim: rgba(16, 185, 129, 0.12);
+    --primary-glow: rgba(16, 185, 129, 0.25);
+    
+    --gold: #f59e0b;
+    --gold-dim: rgba(245, 158, 11, 0.12);
+    --gold-hover: #d97706;
+    
+    --danger: #ef4444;
+    --danger-dim: rgba(239, 68, 68, 0.12);
+    --info: #38bdf8;
+    --info-dim: rgba(56, 189, 248, 0.12);
+    --purple: #a855f7;
+    --purple-dim: rgba(168, 85, 247, 0.12);
+    
+    --text-primary: #f0fdf4;
+    --text-secondary: #94a3b8;
+    --text-dim: #64748b;
+    --text-gold: #fbbf24;
+    
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+    --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 25px rgba(16, 185, 129, 0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Ethiopic', Nyala, system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+
+  button, input, select, textarea {
+    font-family: inherit;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  /* Main Shell Layout */
+  .app-layout {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Sidebar Navigation */
+  .sidebar {
+    width: 270px;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    z-index: 100;
+  }
+
+  .brand-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 10px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .brand-logo {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--primary), var(--gold));
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 20px;
+    color: #052014;
+    box-shadow: 0 4px 14px var(--primary-glow);
+  }
+
+  .brand-text h1 {
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .brand-text h1 span.am {
+    font-family: 'Noto Sans Ethiopic', Nyala, sans-serif;
+    color: var(--gold);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .brand-text p {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .nav-group-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    padding: 12px 12px 6px;
+    font-weight: 700;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    position: relative;
+  }
+
+  .nav-item svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+    flex-shrink: 0;
+  }
+
+  .nav-item:hover {
+    background: var(--bg-surface-elevated);
+    color: var(--text-primary);
+  }
+
+  .nav-item.active {
+    background: var(--primary-dim);
+    color: var(--primary);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 25%;
+    bottom: 25%;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+    background: var(--primary);
+  }
+
+  .badge-pill {
+    margin-left: auto;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--primary);
+    color: #042516;
+    font-weight: 700;
+  }
+
+  .badge-pill.gold {
+    background: var(--gold);
+    color: #2b1800;
+  }
+
+  .sidebar-footer {
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .user-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: var(--bg-surface-elevated);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #3b82f6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+  }
+
+  .user-info {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .user-name {
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .user-stream {
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  /* Main Content Area */
+  .main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 28px 36px 64px;
+    max-width: 1360px;
+    margin: 0 auto;
+  }
+
+  /* Top Bar */
+  .top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .page-title-group h2 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .page-title-group p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  .top-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Segmented Stream Control */
+  .stream-toggle {
+    display: inline-flex;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    padding: 3px;
+    border-radius: var(--radius-md);
+  }
+
+  .stream-btn {
+    padding: 8px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--text-secondary);
+  }
+
+  .stream-btn.active {
+    background: var(--primary);
+    color: #042516;
+    font-weight: 700;
+    box-shadow: 0 2px 8px var(--primary-glow);
+  }
+
+  /* Buttons & Controls */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: var(--radius-md);
+    font-size: 13.5px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #042516;
+    box-shadow: 0 4px 14px var(--primary-glow);
+  }
+
+  .btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #261601;
+    font-weight: 700;
+  }
+
+  .btn-gold:hover {
+    background: var(--gold-hover);
+  }
+
+  /* Card and Panel Styles */
+  .card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.2s ease;
+  }
+
+  .card:hover {
+    border-color: var(--border-light);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Search & Filter Bar */
+  .filter-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-box {
+    position: relative;
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .search-box svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--text-dim);
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 10px 14px 10px 42px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 13.5px;
+  }
+
+  .search-input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--primary-dim);
+  }
+
+  .chip-group {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .filter-chip {
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .filter-chip:hover {
+    background: var(--bg-surface-elevated);
+    color: var(--text-primary);
+  }
+
+  .filter-chip.active {
+    background: var(--primary-dim);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  /* -------------------------------------------------------------
+     MODULE 1: DIGITAL LIBRARY
+  ------------------------------------------------------------- */
+  .library-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .book-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+  }
+
+  .book-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .book-cover {
+    height: 160px;
+    background: linear-gradient(135deg, #132b20, #0c1a14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .book-cover-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    color: var(--gold);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .book-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-md);
+    background: var(--primary-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+  }
+
+  .book-body {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .book-meta {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .book-meta span.subject-pill {
+    color: var(--primary);
+    background: var(--primary-dim);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .book-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .book-title-am {
+    font-size: 13px;
+    color: var(--gold);
+    font-family: 'Noto Sans Ethiopic', Nyala, sans-serif;
+    margin-bottom: 8px;
+  }
+
+  .book-desc {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .book-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  .book-actions .btn {
+    flex: 1;
+    justify-content: center;
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+
+  /* -------------------------------------------------------------
+     MODULE 2: VIDEO LEARNING
+  ------------------------------------------------------------- */
+  .video-layout {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 24px;
+  }
+
+  .player-container {
+    background: #000;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--shadow-card);
+  }
+
+  .player-screen {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #153225 0%, #06100b 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    text-align: center;
+    position: relative;
+  }
+
+  .play-trigger {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #042516;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 30px var(--primary-glow);
+  }
+
+  .play-trigger:hover {
+    transform: scale(1.08);
+  }
+
+  .player-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .player-scrub {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .player-scrub-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 38%;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+
+  .playlist-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    height: 520px;
+  }
+
+  .playlist-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .playlist-items {
+    overflow-y: auto;
+    flex: 1;
+    padding: 10px;
+  }
+
+  .playlist-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid transparent;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .playlist-item:hover {
+    background: var(--bg-surface-elevated);
+  }
+
+  .playlist-item.active {
+    background: var(--primary-dim);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  .playlist-thumb {
+    width: 60px;
+    height: 44px;
+    border-radius: 6px;
+    background: var(--bg-surface-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .playlist-item.active .playlist-thumb {
+    background: var(--primary);
+    color: #042516;
+  }
+
+  .playlist-item-info h4 {
+    font-size: 13.5px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+
+  .playlist-item-info span {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+  }
+
+  /* -------------------------------------------------------------
+     MODULE 3: MELA AI ASSISTANT
+  ------------------------------------------------------------- */
+  .ai-assistant-container {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+    height: calc(100vh - 170px);
+  }
+
+  .ai-sidebar {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ai-preset-btn {
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .ai-preset-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-dim);
+  }
+
+  .ai-preset-btn small {
+    color: var(--gold);
+    font-family: 'Noto Sans Ethiopic', Nyala, sans-serif;
+    font-size: 11.5px;
+  }
+
+  .chat-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .chat-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-surface-elevated);
+  }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .msg-row {
+    display: flex;
+    gap: 12px;
+    max-width: 85%;
+  }
+
+  .msg-row.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .msg-row.bot {
+    align-self: flex-start;
+  }
+
+  .msg-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .msg-row.bot .msg-avatar {
+    background: linear-gradient(135deg, var(--primary), #3b82f6);
+    color: #042516;
+  }
+
+  .msg-row.user .msg-avatar {
+    background: var(--gold);
+    color: #2b1800;
+  }
+
+  .msg-bubble {
+    padding: 14px 18px;
+    border-radius: var(--radius-lg);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .msg-row.bot .msg-bubble {
+    background: var(--bg-surface-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+
+  .msg-row.user .msg-bubble {
+    background: var(--primary);
+    color: #042516;
+    font-weight: 600;
+  }
+
+  .step-box {
+    background: rgba(0, 0, 0, 0.25);
+    border-left: 3px solid var(--primary);
+    padding: 10px 14px;
+    margin: 8px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .step-box h5 {
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .chat-input-bar {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+    display: flex;
+    gap: 12px;
+  }
+
+  .chat-input {
+    flex: 1;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-size: 14px;
+  }
+
+  .chat-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-dim);
+  }
+
+  /* -------------------------------------------------------------
+     MODULE 4: NATIONAL EXAM PREPARATION (EUEE ENGINE)
+  ------------------------------------------------------------- */
+  .exam-setup-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  .exam-package-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: all 0.2s ease;
+  }
+
+  .exam-package-card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.12);
+  }
+
+  .exam-package-badge {
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--gold-dim);
+    color: var(--gold);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .exam-package-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .exam-package-meta {
+    display: flex;
+    gap: 14px;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+  }
+
+  /* In-Exam Testing Arena */
+  .exam-arena {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+  }
+
+  .exam-stage {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+
+  .exam-question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+
+  .exam-stem {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+  }
+
+  .choices-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .choice-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface-elevated);
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    transition: all 0.15s ease;
+  }
+
+  .choice-item:hover {
+    border-color: var(--primary);
+    background: var(--primary-dim);
+  }
+
+  .choice-item.selected {
+    border-color: var(--primary);
+    background: var(--primary-dim);
+    box-shadow: 0 0 14px var(--primary-dim);
+  }
+
+  .choice-letter {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .choice-item.selected .choice-letter {
+    background: var(--primary);
+    color: #042516;
+    border-color: var(--primary);
+  }
+
+  .choice-text {
+    font-size: 14.5px;
+    flex: 1;
+  }
+
+  .exam-sidebar-nav {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .exam-timer-box {
+    text-align: center;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+  }
+
+  .timer-display {
+    font-size: 32px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--primary);
+    letter-spacing: 0.05em;
+  }
+
+  .timer-display.urgent {
+    color: var(--danger);
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .question-palette {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+
+  .palette-node {
+    height: 38px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+  }
+
+  .palette-node.current {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .palette-node.answered {
+    background: var(--primary-dim);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  /* -------------------------------------------------------------
+     MODULE 5: PERFORMANCE DASHBOARD
+  ------------------------------------------------------------- */
+  .dashboard-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .metric-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .metric-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .metric-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-primary);
+  }
+
+  .metric-sub {
+    font-size: 11.5px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .dashboard-layout-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .chart-container {
+    height: 220px;
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .subject-progress-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 50px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .progress-track {
+    height: 8px;
+    background: var(--bg-surface-elevated);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  .progress-bar-fill.strong { background: var(--primary); }
+  .progress-bar-fill.mid { background: var(--gold); }
+  .progress-bar-fill.weak { background: var(--danger); }
+
+  .weak-alert-box {
+    background: var(--danger-dim);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* -------------------------------------------------------------
+     MODULE 6: SMART DICTIONARY
+  ------------------------------------------------------------- */
+  .dictionary-split {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 24px;
+  }
+
+  .word-list {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    height: 640px;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .word-card-btn {
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+    background: transparent;
+    border: 1px solid transparent;
+    margin-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .word-card-btn:hover {
+    background: var(--bg-surface-elevated);
+  }
+
+  .word-card-btn.active {
+    background: var(--primary-dim);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  .word-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .word-english {
+    font-size: 14.5px;
+    font-weight: 700;
+  }
+
+  .word-amharic {
+    font-size: 13px;
+    color: var(--gold);
+    font-family: 'Noto Sans Ethiopic', Nyala, sans-serif;
+  }
+
+  .word-detail-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+  }
+
+  .word-detail-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+  }
+
+  .word-detail-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text-primary);
+  }
+
+  .word-detail-amharic {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gold);
+    font-family: 'Noto Sans Ethiopic', Nyala, sans-serif;
+    margin-top: 4px;
+  }
+
+  .phonetic-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--info);
+    background: var(--info-dim);
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+  }
+
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+  }
+
+  .modal-dialog {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 32px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Responsive Rules */
+  @media (max-width: 1024px) {
+    .dashboard-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .dashboard-layout-grid { grid-template-columns: 1fr; }
+    .video-layout { grid-template-columns: 1fr; }
+    .ai-assistant-container { grid-template-columns: 1fr; height: auto; }
+    .dictionary-split { grid-template-columns: 1fr; }
+    .exam-arena { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    .app-layout { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: static; }
+    .main-content { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand-container">
+      <div class="brand-logo">M</div>
+      <div class="brand-text">
+        <h1>MELA <span class="am">መላ</span></h1>
+        <p>Grade 12 AI Desk · Ethiopia</p>
+      </div>
+    </div>
+
+    <nav class="nav-menu">
+      <div class="nav-group-title">Study Hub</div>
+      
+      <button type="button" class="nav-item active" data-view="dashboard">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+        <span>Performance Dashboard</span>
+      </button>
+
+      <button type="button" class="nav-item" data-view="library">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        <span>Digital Library</span>
+        <span class="badge-pill">16 Books</span>
+      </button>
+
+      <button type="button" class="nav-item" data-view="video">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>Video Lessons</span>
+      </button>
+
+      <button type="button" class="nav-item" data-view="assistant">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>
+        <span>MELA AI Assistant</span>
+        <span class="badge-pill gold">Bilingual</span>
+      </button>
+
+      <div class="nav-group-title">Exam & Tools</div>
+
+      <button type="button" class="nav-item" data-view="exam">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>National Exam Prep</span>
+        <span class="badge-pill">EUEE</span>
+      </button>
+
+      <button type="button" class="nav-item" data-view="dictionary">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+        <span>Smart Dictionary</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar">MA</div>
+        <div class="user-info">
+          <div class="user-name">Muzemil Awel</div>
+          <div class="user-stream" id="userStreamLabel">Natural Science · 2017 E.C.</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Container -->
+  <main class="main-content" id="appMain"></main>
+</div>
+
+<!-- Modal Container -->
+<div id="modalContainer"></div>
+
+<script>
+/* =====================================================================
+   MELA (መላ) - COMPREHENSIVE DATA ENGINE FOR ETHIOPIAN GRADE 12
+===================================================================== */
+
+const STORAGE_KEYS = {
+  EXAM_ATTEMPTS: "mela_exam_attempts_v2",
+  BOOKMARKS: "mela_bookmarks_v1",
+  CHAT_HISTORY: "mela_ai_chat_v1",
+  STREAM: "mela_user_stream_v1"
+};
+
+// 1. Digital Library Resources
+const DIGITAL_BOOKS = [
+  {
+    id: "math-nat-12",
+    title: "Grade 12 Mathematics (Natural Science)",
+    amharic: "የ12ኛ ክፍል ሂሳብ (የተፈጥሮ ሳይንስ)",
+    subject: "Mathematics",
+    stream: "natural",
+    author: "Federal Ministry of Education (MoE)",
+    pages: 342,
+    rating: 4.9,
+    coverColor: "#0f4c3a",
+    badge: "Official MoE",
+    summary: "Complete curriculum covering Sequences and Series, Introduction to Calculus (Limits, Derivatives, Integrals), Coordinate Geometry, and Vectors.",
+    units: ["Unit 1: Sequences and Series", "Unit 2: Introduction to Calculus", "Unit 3: Statistics and Probability", "Unit 4: Vectors and 3D Geometry"]
+  },
+  {
+    id: "physics-12",
+    title: "Grade 12 Physics Student Textbook",
+    amharic: "የ12ኛ ክፍል ፊዚክስ የተማሪ መጽሐፍ",
+    subject: "Physics",
+    stream: "natural",
+    author: "Ministry of Education & Hawassa Univ. Press",
+    pages: 298,
+    rating: 4.8,
+    coverColor: "#1e3a5f",
+    badge: "Official MoE",
+    summary: "Thermodynamics, Wave Motion, Geometric & Physical Optics, Electrostatics, Magnetism, and Introduction to Modern & Quantum Physics.",
+    units: ["Unit 1: Thermodynamics", "Unit 2: Wave Optics", "Unit 3: Electric and Magnetic Fields", "Unit 4: Nuclear Physics"]
+  },
+  {
+    id: "chemistry-12",
+    title: "Grade 12 Chemistry Student Textbook",
+    amharic: "የ12ኛ ክፍል ኬሚስትሪ መጽሐፍ",
+    subject: "Chemistry",
+    stream: "natural",
+    author: "Ministry of Education",
+    pages: 275,
+    rating: 4.7,
+    coverColor: "#4a154b",
+    badge: "Official MoE",
+    summary: "Solutions, Acid-Base Equilibria, Chemical Kinetics, Electrochemistry, and Polymers & Industrial Chemistry in Ethiopia.",
+    units: ["Unit 1: Solutions and Colloids", "Unit 2: Acid-Base Equilibria", "Unit 3: Electrochemistry", "Unit 4: Industrial Chemistry"]
+  },
+  {
+    id: "biology-12",
+    title: "Grade 12 Biology Student Textbook",
+    amharic: "የ12ኛ ክፍል ባዮሎጂ የተማሪ መጽሐፍ",
+    subject: "Biology",
+    stream: "natural",
+    author: "Ministry of Education",
+    pages: 310,
+    rating: 4.9,
+    coverColor: "#134e4a",
+    badge: "Official MoE",
+    summary: "Molecular Biology, Heredity & Genetics, Evolution, Nervous & Endocrine Systems, and Biodiversity of Ethiopian Ecosystems.",
+    units: ["Unit 1: Biomolecules and Enzymes", "Unit 2: Genetics and Inheritance", "Unit 3: Human Anatomy and Physiology", "Unit 4: Ecology and Conservation"]
+  },
+  {
+    id: "english-12",
+    title: "Grade 12 English for Ethiopia",
+    amharic: "የ12ኛ ክፍል እንግሊዝኛ መጽሐፍ",
+    subject: "English",
+    stream: "both",
+    author: "Ministry of Education",
+    pages: 240,
+    rating: 4.6,
+    coverColor: "#701a75",
+    badge: "Common Core",
+    summary: "Advanced Academic Reading, Grammar (Conditionals, Reported Speech, Passive Voice), Academic Vocabulary, and National Exam Essay Writing.",
+    units: ["Unit 1: Sustainable Development", "Unit 2: Cultural Heritage", "Unit 3: Science & Innovation", "Unit 4: College Readiness"]
+  },
+  {
+    id: "civics-12",
+    title: "Civic and Ethical Education Grade 12",
+    amharic: "የስነ-ዜጋና ስነ-ምግባር ትምህርት 12ኛ ክፍል",
+    subject: "Civics",
+    stream: "both",
+    author: "Federal Ministry of Education",
+    pages: 215,
+    rating: 4.8,
+    coverColor: "#78350f",
+    badge: "National Blueprint",
+    summary: "The FDRE Constitution, Principles of Democracy, Rule of Law, Federalism, Human Rights, Patriotism, and Global Citizenship.",
+    units: ["Unit 1: Building a Democratic System", "Unit 2: The Rule of Law", "Unit 3: Equality and Diversity", "Unit 4: Justice and Dispute Resolution"]
+  },
+  {
+    id: "geo-12",
+    title: "Grade 12 Geography Student Textbook",
+    amharic: "የ12ኛ ክፍል ጂኦግራፊ መጽሐፍ",
+    subject: "Geography",
+    stream: "social",
+    author: "Ministry of Education",
+    pages: 260,
+    rating: 4.7,
+    coverColor: "#065f46",
+    badge: "Social Stream",
+    summary: "Advanced Map Work, Geographical Information Systems (GIS), Physical Geography of Ethiopia & the Horn, Demography, and Economic Development.",
+    units: ["Unit 1: Basic Map Work Techniques", "Unit 2: GIS and Remote Sensing", "Unit 3: Climate and Vegetation of Ethiopia", "Unit 4: Ethiopian Population Dynamics"]
+  },
+  {
+    id: "history-12",
+    title: "Grade 12 History: Ethiopia and the World",
+    amharic: "የ12ኛ ክፍል ታሪክ መጽሐፍ",
+    subject: "History",
+    stream: "social",
+    author: "Ministry of Education",
+    pages: 290,
+    rating: 4.9,
+    coverColor: "#831843",
+    badge: "Social Stream",
+    summary: "Ethiopia from 1855 to Present, The Battle of Adwa, Modern State Formation, Italian Occupation & Resistance, and African Liberation Movements.",
+    units: ["Unit 1: State Formation under Tewodros to Menelik", "Unit 2: The Battle of Adwa and Sovereignty", "Unit 3: The 1936-1941 Resistance", "Unit 4: Contemporary Ethiopian History"]
+  },
+  {
+    id: "econ-12",
+    title: "Grade 12 Economics Student Textbook",
+    amharic: "የ12ኛ ክፍል ኢኮኖሚክስ መጽሐፍ",
+    subject: "Economics",
+    stream: "social",
+    author: "Ministry of Education",
+    pages: 255,
+    rating: 4.7,
+    coverColor: "#1e293b",
+    badge: "Social Stream",
+    summary: "National Income Accounting, Aggregate Demand and Supply, Inflation and Monetary Policy in Ethiopia, and International Trade.",
+    units: ["Unit 1: Macroeconomic Fundamentals", "Unit 2: National Income Accounting", "Unit 3: Money, Banking and Inflation", "Unit 4: Economic Growth of Ethiopia"]
+  },
+  {
+    id: "extreme-physics",
+    title: "Extreme Physics: Grade 11-12 Review",
+    amharic: "ኤክስትሪም ፊዚክስ ማጠቃለያ",
+    subject: "Physics",
+    stream: "natural",
+    author: "Alpha Academic Series",
+    pages: 410,
+    rating: 5.0,
+    coverColor: "#14532d",
+    badge: "Best Seller",
+    summary: "High-yield formulas, 1000+ solved national exam questions, conceptual shortcuts, and unit-by-unit memory booster sheets.",
+    units: ["Mechanics Review", "Electromagnetism Master Guide", "Optics & Thermodynamics Formulas", "Past EUEE 10-Year Question Bank"]
+  }
+];
+
+// 2. Video Lessons Catalog
+const VIDEO_LESSONS = [
+  {
+    id: "vid-calc-1",
+    title: "Calculus: Finding Derivatives using Power and Chain Rules",
+    amharic: "ዲሪቬቲቭ በፓወር እና ቼይን ሩል እንዴት ይሰላል?",
+    subject: "Mathematics",
+    stream: "natural",
+    instructor: "Ato Tadesse Bekele (Ex-Addis Ababa Science Academy)",
+    duration: "24:18",
+    views: "18.4K",
+    units: "Unit 2: Introduction to Calculus",
+    chapters: [
+      { time: "00:00", title: "Introduction & Geometric Meaning of f'(x)" },
+      { time: "05:12", title: "The Power Rule: d/dx(x^n) = n*x^(n-1)" },
+      { time: "11:45", title: "Worked Example: Polynomial Slopes" },
+      { time: "17:30", title: "Composite Functions & The Chain Rule" },
+      { time: "21:40", title: "Common EUEE Exam Traps & Tricks" }
+    ],
+    summary: "In this comprehensive lesson, Master Teacher Tadesse walks through the essential calculus concepts tested on the Ethiopian National Examination."
+  },
+  {
+    id: "vid-phys-1",
+    title: "Newton's Laws & Momentum in Ethiopian University Entrance",
+    amharic: "የኒውተን ሕጎች እና ሞመንተም ለብሔራዊ ፈተና",
+    subject: "Physics",
+    stream: "natural",
+    instructor: "Dr. Almaz Yohannes (Department of Physics, AAU)",
+    duration: "28:50",
+    views: "24.1K",
+    units: "Unit 1: Mechanics",
+    chapters: [
+      { time: "00:00", title: "Free Body Diagrams & Net Force" },
+      { time: "06:40", title: "Newton's 2nd Law (Sigma F = ma)" },
+      { time: "13:20", title: "Conservation of Linear Momentum" },
+      { time: "20:15", title: "Elastic vs Inelastic Collisions" },
+      { time: "25:30", title: "Past 2015 E.C. Exam Problem Breakdown" }
+    ],
+    summary: "Clear breakdowns of forces on inclined planes, friction calculations, and collision problems with bilingual Amharic-English commentary."
+  },
+  {
+    id: "vid-chem-1",
+    title: "Acid-Base Equilibria & pH Calculations Explained",
+    amharic: "አሲድ-ቤዝ ኢኩሊብሪየም እና የፒኤች ስሌት",
+    subject: "Chemistry",
+    stream: "natural",
+    instructor: "Teacher Samuel Girma",
+    duration: "21:10",
+    views: "15.9K",
+    units: "Unit 2: Acid-Base Equilibria",
+    chapters: [
+      { time: "00:00", title: "Arrhenius vs Bronsted-Lowry Theory" },
+      { time: "04:30", title: "Ion Product of Water (Kw) and pH" },
+      { time: "10:15", title: "Calculating pH for Strong and Weak Acids" },
+      { time: "16:40", title: "Buffer Solutions & Common Ion Effect" }
+    ],
+    summary: "Master the tricky logarithmic pH calculations and conjugate acid-base pairs with practical Ethiopian laboratory examples."
+  },
+  {
+    id: "vid-hist-1",
+    title: "The Battle of Adwa (1896): Strategic & Geopolitical Genius",
+    amharic: "የአድዋ ጦርነት የታሪክ ትንታኔ",
+    subject: "History",
+    stream: "social",
+    instructor: "Historian Kassahun Desta",
+    duration: "31:40",
+    views: "32.8K",
+    units: "Unit 2: Modern Ethiopian History",
+    chapters: [
+      { time: "00:00", title: "Treaty of Wuchale (Article XVII Dispute)" },
+      { time: "08:20", title: "Mobilization from Every Region to Adwa" },
+      { time: "15:45", title: "Military Tactics & March 1, 1896" },
+      { time: "24:10", title: "Treaty of Addis Ababa & Global Impact" }
+    ],
+    summary: "A vivid exploration of the Battle of Adwa, Emperor Menelik II, Empress Taytu Betul, and key historical points tested on the EUEE exam."
+  },
+  {
+    id: "vid-econ-1",
+    title: "Macroeconomics: Inflation, CPI and Purchasing Power",
+    amharic: "የዋጋ ግሽበት፣ ሲፒአይ እና የመግዛት አቅም",
+    subject: "Economics",
+    stream: "social",
+    instructor: "Ato Biruk Tesfaye",
+    duration: "19:25",
+    views: "12.3K",
+    units: "Unit 3: Inflation and Monetary Policy",
+    chapters: [
+      { time: "00:00", title: "Demand-Pull vs Cost-Push Inflation" },
+      { time: "05:50", title: "Calculating the Consumer Price Index (CPI)" },
+      { time: "11:30", title: "Real Income vs Nominal Income" },
+      { time: "16:00", title: "National Bank of Ethiopia Monetary Tools" }
+    ],
+    summary: "Understand how macroeconomic indicators are measured and solve typical EUEE economic computation questions."
+  }
+];
+
+// 3. National Exam Question Bank (EUEE Past Papers & High-Yield Mocks)
+const EXAM_PACKAGES = [
+  {
+    id: "euee-2016-nat",
+    title: "2016 E.C. Ethiopian University Entrance Exam (Natural Science)",
+    amharic: "የ2016 ዓ.ም የዩኒቨርሲቲ መግቢያ ፈተና (የተፈጥሮ ሳይንስ)",
+    stream: "natural",
+    year: "2016 E.C.",
+    durationMinutes: 15, // configured for demo checkpoint
+    questionCount: 8,
+    category: "Full National Exam Mock",
+    questions: [
+      {
+        id: "q-2016-m1",
+        subject: "Mathematics",
+        topic: "Calculus (Derivatives)",
+        stem: "Let f(x) = 2x³ - 5x² + 4x - 9. What is the value of f''(1), the second derivative evaluated at x = 1?",
+        choices: [
+          "2",
+          "12",
+          "6",
+          "-5"
+        ],
+        answer: 0,
+        explanation: "First derivative f'(x) = 6x² - 10x + 4. Second derivative f''(x) = 12x - 10. Evaluating at x = 1 gives f''(1) = 12(1) - 10 = 2. Choice A is correct."
+      },
+      {
+        id: "q-2016-m2",
+        subject: "Mathematics",
+        topic: "Sequences & Series",
+        stem: "In an arithmetic progression, the third term is 11 and the seventh term is 27. What is the first term (a₁) and the common difference (d)?",
+        choices: [
+          "a₁ = 3, d = 4",
+          "a₁ = 4, d = 3",
+          "a₁ = 5, d = 4",
+          "a₁ = 2, d = 5"
+        ],
+        answer: 0,
+        explanation: "a₃ = a₁ + 2d = 11, and a₇ = a₁ + 6d = 27. Subtracting the first from the second gives 4d = 16 => d = 4. Substituting back: a₁ + 2(4) = 11 => a₁ = 3."
+      },
+      {
+        id: "q-2016-p1",
+        subject: "Physics",
+        topic: "Mechanics (Work & Energy)",
+        stem: "A block of mass 4 kg is pulled along a smooth horizontal surface by a constant horizontal force of 20 N for a distance of 5 metres. What is the work done on the block?",
+        choices: [
+          "100 Joules",
+          "80 Joules",
+          "20 Joules",
+          "400 Joules"
+        ],
+        answer: 0,
+        explanation: "Work done W = F * d * cos(theta). Since force and motion are horizontal, cos(0) = 1. W = 20 N * 5 m = 100 J."
+      },
+      {
+        id: "q-2016-p2",
+        subject: "Physics",
+        topic: "Ohm's Law & Circuits",
+        stem: "Two resistors of 6 ohms and 12 ohms are connected in parallel across a 12 V battery. What is the total current flowing from the battery?",
+        choices: [
+          "3 Amperes",
+          "1.5 Amperes",
+          "6 Amperes",
+          "0.67 Amperes"
+        ],
+        answer: 0,
+        explanation: "Equivalent resistance Req for two parallel resistors = (6 * 12) / (6 + 12) = 72 / 18 = 4 ohms. Using Ohm's Law: I = V / R = 12 V / 4 ohms = 3 A."
+      },
+      {
+        id: "q-2016-c1",
+        subject: "Chemistry",
+        topic: "Acids & pH",
+        stem: "What is the pH of a 0.005 M sulfuric acid (H₂SO₄) solution, assuming complete dissociation into 2 H⁺ and SO₄²⁻?",
+        choices: [
+          "2.0",
+          "2.3",
+          "1.0",
+          "3.0"
+        ],
+        answer: 0,
+        explanation: "Because H₂SO₄ is diprotic, [H⁺] = 2 * 0.005 M = 0.01 M = 10⁻² M. Therefore, pH = -log(10⁻²) = 2.0."
+      },
+      {
+        id: "q-2016-c2",
+        subject: "Chemistry",
+        topic: "The Mole & Stoichiometry",
+        stem: "How many grams of water (H₂O) are produced when 4 grams of hydrogen gas (H₂) react completely with excess oxygen gas (O₂)? (Atomic masses: H = 1, O = 16)",
+        choices: [
+          "36 grams",
+          "18 grams",
+          "72 grams",
+          "9 grams"
+        ],
+        answer: 0,
+        explanation: "Balanced equation: 2H₂ + O₂ -> 2H₂O. 4 g H₂ / (2 g/mol) = 2 moles of H₂. 2 moles of H₂ produce 2 moles of H₂O. Mass of 2 moles H₂O = 2 * 18 g/mol = 36 g."
+      },
+      {
+        id: "q-2016-b1",
+        subject: "Biology",
+        topic: "Molecular Biology (Photosynthesis)",
+        stem: "During the light-dependent reactions of photosynthesis in chloroplasts, photolysis of water directly produces which molecule released into the atmosphere?",
+        choices: [
+          "Oxygen (O₂)",
+          "Carbon dioxide (CO₂)",
+          "Glucose (C₆H₁₂O₆)",
+          "ATP"
+        ],
+        answer: 0,
+        explanation: "Light splits water molecules (photolysis): 2H₂O -> 4H⁺ + 4e⁻ + O₂. Oxygen is liberated as a byproduct into the atmosphere."
+      },
+      {
+        id: "q-2016-civ1",
+        subject: "Civics",
+        topic: "The FDRE Constitution",
+        stem: "According to Article 9 of the FDRE Constitution, what status does the Constitution hold in Ethiopia?",
+        choices: [
+          "It is the supreme law of the land, and any law contradicting it has no effect",
+          "It can be overridden by regional state laws in special cases",
+          "It serves solely as an advisory charter for the judiciary",
+          "It applies only to federal civil servants"
+        ],
+        answer: 0,
+        explanation: "Article 9(1) of the FDRE Constitution explicitly declares: 'The Constitution is the supreme law of the land. Any law, customary practice or a decision of an organ of state or a public official which contravenes this Constitution shall be of no effect.'"
+      }
+    ]
+  },
+  {
+    id: "euee-2015-soc",
+    title: "2015 E.C. Ethiopian University Entrance Exam (Social Science)",
+    amharic: "የ2015 ዓ.ም የዩኒቨርሲቲ መግቢያ ፈተና (የማህበራዊ ሳይንስ)",
+    stream: "social",
+    year: "2015 E.C.",
+    durationMinutes: 15,
+    questionCount: 6,
+    category: "Full National Exam Mock",
+    questions: [
+      {
+        id: "q-2015-h1",
+        subject: "History",
+        topic: "The Battle of Adwa",
+        stem: "Which Italian general commanded the Italian invading army defeated by Ethiopian patriots at the Battle of Adwa on March 1, 1896?",
+        choices: [
+          "General Oreste Baratieri",
+          "Marshal Pietro Badoglio",
+          "General Rodolfo Graziani",
+          "Emilio De Bono"
+        ],
+        answer: 0,
+        explanation: "General Oreste Baratieri was the commander-in-chief of the Italian invasion force defeated decisively at Adwa. Badoglio and Graziani commanded during the later 1935-1936 invasion."
+      },
+      {
+        id: "q-2015-g1",
+        subject: "Geography",
+        topic: "Map Scales & Cartography",
+        stem: "On a topographical map with a scale of 1:50,000, two towns are separated by 6 cm on the paper. What is the real ground distance between the two towns in kilometres?",
+        choices: [
+          "3.0 km",
+          "30 km",
+          "0.3 km",
+          "12 km"
+        ],
+        answer: 0,
+        explanation: "1 cm on map = 50,000 cm on ground = 500 m = 0.5 km. Therefore, 6 cm = 6 * 0.5 km = 3.0 km."
+      },
+      {
+        id: "q-2015-e1",
+        subject: "Economics",
+        topic: "Macroeconomics (Inflation)",
+        stem: "When a nation experiences inflation caused by sudden increases in raw material prices and production wages, this is classified as:",
+        choices: [
+          "Cost-push inflation",
+          "Demand-pull inflation",
+          "Deflationary equilibrium",
+          "Hyper-monetary surplus"
+        ],
+        answer: 0,
+        explanation: "Cost-push inflation occurs when aggregate supply decreases due to increases in the cost of wages and raw materials, shifting the supply curve left."
+      },
+      {
+        id: "q-2015-e2",
+        subject: "Economics",
+        topic: "Opportunity Cost",
+        stem: "A farmer in Arsi has 2 hectares of arable land and chooses to grow barley instead of teff. The forgone revenue from the unplanted teff represents the farmer's:",
+        choices: [
+          "Opportunity cost",
+          "Marginal revenue",
+          "Variable overhead cost",
+          "Sunk asset"
+        ],
+        answer: 0,
+        explanation: "Opportunity cost is defined as the value of the next best alternative given up when making an economic decision."
+      },
+      {
+        id: "q-2015-g2",
+        subject: "Geography",
+        topic: "Climate Zones of Ethiopia",
+        stem: "In Ethiopia's traditional agro-climatic zoning, which zone represents the cool highland plateau located between 2,300 and 3,300 metres above sea level?",
+        choices: [
+          "Dega",
+          "Woina Dega",
+          "Kolla",
+          "Bereha"
+        ],
+        answer: 0,
+        explanation: "Dega corresponds to the cool temperate highlands (2,300 - 3,300m). Woina Dega is 1,500 - 2,300m, Kolla is 500 - 1,500m, and Bereha is below 500m."
+      },
+      {
+        id: "q-2015-civ2",
+        subject: "Civics",
+        topic: "Federalism in Ethiopia",
+        stem: "Which principle best characterizes the federal structural arrangement of the Federal Democratic Republic of Ethiopia?",
+        choices: [
+          "Division of powers between the Federal Government and regional Member States",
+          "Total concentration of legislative power within the office of the Prime Minister",
+          "Unicameral judiciary without regional supreme courts",
+          "Direct administrative rule of regions by municipal mayors"
+        ],
+        answer: 0,
+        explanation: "Under federalism, sovereign constitutional authority is divided between the federal central government and regional member states."
+      }
+    ]
+  }
+];
+
+// 4. Smart Dictionary (Bilingual Academic English-Amharic Glossary)
+const SMART_DICTIONARY = [
+  {
+    word: "derivative",
+    amharic: "ዲሪቬቲቭ (የለውጥ ምጣኔ)",
+    phonetic: "/dɪˈrɪv.ə.tɪv/",
+    subject: "Mathematics",
+    definition: "The rate of change of a mathematical function with respect to a variable; geometrically represents the slope of the tangent line to the curve.",
+    example: "In Grade 12 calculus, the derivative of f(x) = x² is 2x, which represents the instantaneous velocity.",
+    amharicExample: "በ12ኛ ክፍል ካልኩለስ የf(x) = x² ዲሪቬቲቭ 2x ሲሆን የቅጽበታዊ ፍጥነትን ያሳያል።"
+  },
+  {
+    word: "equilibrium",
+    amharic: "ሚዛናዊነት (ኢኩሊብሪየም)",
+    phonetic: "/ˌiː.kwəˈlɪb.ri.əm/",
+    subject: "Chemistry",
+    definition: "A state in a chemical reaction where the rate of the forward reaction equals the rate of the reverse reaction, keeping reactant and product concentrations constant.",
+    example: "At chemical equilibrium, the ratio of product concentrations to reactant concentrations equals the equilibrium constant Kc.",
+    amharicExample: "ኬሚካላዊ ሚዛናዊነት ላይ ወደ ፊትና ወደ ኋላ የሚካሄዱ ግብረ-መልሶች ፍጥነት እኩል ይሆናል።"
+  },
+  {
+    word: "photosynthesis",
+    amharic: "ፎቶሲንተሲስ (የብርሃን ቅንብር)",
+    phonetic: "/ˌfoʊ.t̬oʊˈsɪn.θə.sɪs/",
+    subject: "Biology",
+    definition: "The biological process by which green plants and certain organisms convert sunlight energy into chemical glucose using carbon dioxide and water, liberating oxygen.",
+    example: "Chlorophyll pigments inside the thylakoid membranes capture photons to drive photosynthesis.",
+    amharicExample: "አረንጓዴ እፅዋት በፎቶሲንተሲስ አማካኝነት የፀሐይ ብርሃንን ተጠቅመው ምግብ ያዘጋጃሉ፤ ኦክስጅንንም ይለቃሉ።"
+  },
+  {
+    word: "acceleration",
+    amharic: "ፍጥንጥነት",
+    phonetic: "/əkˌsel.əˈreɪ.ʃən/",
+    subject: "Physics",
+    definition: "The rate at which the velocity of an object changes over time, measured in metres per second squared (m/s²).",
+    example: "According to Newton's Second Law, acceleration is directly proportional to net force and inversely proportional to mass.",
+    amharicExample: "የአንድ አካል የፍጥነት ለውጥ ምጣኔ ፍጥንጥነት ተብሎ ይጠራል።"
+  },
+  {
+    word: "inflation",
+    amharic: "የዋጋ ግሽበት",
+    phonetic: "/ɪnˈfleɪ.ʃən/",
+    subject: "Economics",
+    definition: "A sustained and continuous increase in the general price level of goods and services in an economy over a given period, diminishing purchasing power.",
+    example: "When money supply increases without a corresponding increase in real GDP, demand-pull inflation typically results.",
+    amharicExample: "የዋጋ ግሽበት የሸቀጦች እና አገልግሎቶች ዋጋ በተከታታይ ሲጨምርና የገንዘብ የመግዛት አቅም ሲቀንስ የሚከሰት ነው።"
+  },
+  {
+    word: "sovereignty",
+    amharic: "ሉዓላዊነት",
+    phonetic: "/ˈsɑːv.rən.ti/",
+    subject: "Civics & History",
+    definition: "The supreme, absolute, and uncontrollable power by which any independent state governs itself free from external control.",
+    example: "The Ethiopian victory at Adwa in 1896 permanently preserved the nation's independence and sovereign territorial integrity.",
+    amharicExample: "በ1896 ዓ.ም የተመዘገበው የአድዋ ድል የኢትዮጵያን ነፃነትና ሉዓላዊነት በፅኑ ያስከበረ ኩሩ ታሪክ ነው።"
+  },
+  {
+    word: "hypothesis",
+    amharic: "የመላምት ንድፈ-ሐሳብ",
+    phonetic: "/haɪˈpɑː.θə.sɪs/",
+    subject: "Scientific Method",
+    definition: "A proposed, testable explanation for a natural phenomenon made on the basis of limited evidence as a starting point for further scientific investigation.",
+    example: "Grade 12 students formed a hypothesis that increasing temperature would accelerate the enzymatic reaction rate.",
+    amharicExample: "ሳይንሳዊ ምርምር ከመካሄዱ በፊት ሊፈተን የሚችል መላምት ማስቀመጥ ቀዳሚ ተግባር ነው።"
+  },
+  {
+    word: "topography",
+    amharic: "ቶፖግራፊ (የመሬት ገጽታ አቀማመጥ)",
+    phonetic: "/təˈpɑː.ɡrə.fi/",
+    subject: "Geography",
+    definition: "The detailed physical study and representation of the surface features, contours, relief, and elevation of a region.",
+    example: "Ethiopian topography is characterized by high rugged central plateaus bisected by the Great Rift Valley.",
+    amharicExample: "የኢትዮጵያ ቶፖግራፊ በከፍተኛ ተራራማ አምባዎችና በታላቁ የስምጥ ሸለቆ የተከፈለ የተለያየ ገጽታ አለው።"
+  },
+  {
+    word: "meiosis",
+    amharic: "ሚዮሲስ (የሕዋስ ቅነሳ ክፍፍል)",
+    phonetic: "/maɪˈoʊ.sɪs/",
+    subject: "Biology",
+    definition: "A specialized type of cell division that reduces the chromosome number by half, creating four genetically diverse haploid gametes (sperm and egg).",
+    example: "Crossing over during prophase I of meiosis introduces genetic variation in the offspring.",
+    amharicExample: "ሚዮሲስ የክሮሞሶም ቁጥርን በግማሽ በመቀነስ አዳዲስ የዘር ውህደቶችን የሚፈጥር የሕዋስ ክፍፍል ነው።"
+  },
+  {
+    word: "resistivity",
+    amharic: "የተፈጥሮ ተቃውሞ ምጣኔ",
+    phonetic: "/ˌriː.zɪsˈtɪv.ə.t̬i/",
+    subject: "Physics",
+    definition: "An intrinsic property of a material measuring how strongly it resists electric current, symbolized by rho (ρ).",
+    example: "Copper has low resistivity, making it an excellent electrical conductor for domestic wiring.",
+    amharicExample: "የቁስ አካላት የኤሌክትሪክ ፍሰትን የመቋቋም የተፈጥሮ ባሕርይ ሬዚስቲቪቲ ይባላል።"
+  }
+];
+
+// 5. Default Benchmark Performance Profile
+const DEFAULT_PERFORMANCE_METRICS = {
+  natural: {
+    readiness: 76,
+    predictedScore: 532,
+    totalTests: 14,
+    streakDays: 6,
+    history: [
+      { date: "Oct 1", score: 62 },
+      { date: "Oct 8", score: 68 },
+      { date: "Oct 15", score: 65 },
+      { date: "Oct 22", score: 74 },
+      { date: "Oct 29", score: 71 },
+      { date: "Nov 5", score: 79 }
+    ],
+    subjectBreakdown: [
+      { subject: "Mathematics", accuracy: 68, attempts: 42, status: "mid" },
+      { subject: "Physics", accuracy: 54, attempts: 38, status: "weak" },
+      { subject: "Chemistry", accuracy: 78, attempts: 35, status: "strong" },
+      { subject: "Biology", accuracy: 86, attempts: 30, status: "strong" },
+      { subject: "English", accuracy: 74, attempts: 28, status: "mid" },
+      { subject: "Civics", accuracy: 88, attempts: 25, status: "strong" }
+    ],
+    weakTopics: [
+      { title: "Newton's Second Law & Momentum", subject: "Physics", acc: 48, amharic: "የኒውተን ሕጎች" },
+      { title: "Derivatives & Chain Rule", subject: "Mathematics", acc: 52, amharic: "የካልኩለስ ዲሪቬቲቭ" },
+      { title: "Acid-Base pH Equilibria", subject: "Chemistry", acc: 58, amharic: "የአሲድና ፒኤች ስሌቶች" }
+    ]
+  },
+  social: {
+    readiness: 72,
+    predictedScore: 508,
+    totalTests: 11,
+    streakDays: 4,
+    history: [
+      { date: "Oct 1", score: 58 },
+      { date: "Oct 8", score: 63 },
+      { date: "Oct 15", score: 67 },
+      { date: "Oct 22", score: 64 },
+      { date: "Oct 29", score: 72 },
+      { date: "Nov 5", score: 75 }
+    ],
+    subjectBreakdown: [
+      { subject: "History", accuracy: 88, attempts: 34, status: "strong" },
+      { subject: "Geography", accuracy: 59, attempts: 32, status: "weak" },
+      { subject: "Economics", accuracy: 64, attempts: 40, status: "mid" },
+      { subject: "Mathematics (Social)", accuracy: 62, attempts: 28, status: "mid" },
+      { subject: "English", accuracy: 76, attempts: 25, status: "strong" },
+      { subject: "Civics", accuracy: 84, attempts: 22, status: "strong" }
+    ],
+    weakTopics: [
+      { title: "Topographical Map Scales (1:50,000)", subject: "Geography", acc: 45, amharic: "የካርታ መለኪያ" },
+      { title: "Cost-Push vs Demand-Pull Inflation", subject: "Economics", acc: 54, amharic: "የዋጋ ግሽበት" },
+      { title: "Arithmetic Sequences (a_n)", subject: "Mathematics", acc: 58, amharic: "የሂሳብ ቅደም ተከተል" }
+    ]
+  }
+};
+
+/* =====================================================================
+   GLOBAL APPLICATION STATE
+===================================================================== */
+const appState = {
+  currentView: "dashboard",
+  activeStream: localStorage.getItem(STORAGE_KEYS.STREAM) || "natural",
+  selectedSubject: "all",
+  searchQuery: "",
+  
+  // Video Lesson State
+  activeVideoId: "vid-calc-1",
+  videoPlaying: false,
+  
+  // AI Assistant Chat State
+  chatMessages: [
+    {
+      sender: "bot",
+      text: "ሰላም ሙዘሚል! I am your MELA Grade 12 AI Study Assistant. Whether you need step-by-step math breakdowns, Amharic explanations of physics laws, or national exam revision questions, ask me anything!",
+      time: "Just now"
+    }
+  ],
+  
+  // Exam Engine State
+  activeExam: null,
+  currentQuestionIndex: 0,
+  userExamAnswers: {},
+  examSecondsRemaining: 0,
+  examTimerInterval: null,
+  examFinished: false,
+  
+  // Dictionary State
+  selectedWord: "derivative",
+  dictionaryFilter: ""
+};
+
+/* =====================================================================
+   CORE VIEW CONTROLLERS
+===================================================================== */
+
+function setView(viewName) {
+  appState.currentView = viewName;
+  document.querySelectorAll(".nav-item").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.view === viewName);
+  });
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function setStream(streamName) {
+  appState.activeStream = streamName;
+  localStorage.setItem(STORAGE_KEYS.STREAM, streamName);
+  const streamLabel = document.getElementById("userStreamLabel");
+  if (streamLabel) {
+    streamLabel.textContent = (streamName === "natural" ? "Natural Science" : "Social Science") + " · 2017 E.C.";
+  }
+  render();
+}
+
+/* -------------------------------------------------------------
+   RENDER: 1. PERFORMANCE DASHBOARD
+------------------------------------------------------------- */
+function renderDashboard() {
+  const data = DEFAULT_PERFORMANCE_METRICS[appState.activeStream];
+  const streamTitle = appState.activeStream === "natural" ? "Natural Science" : "Social Science";
+
+  // SVG Trend Chart Construction
+  const points = data.history;
+  const chartW = 540, chartH = 170, padL = 36, padR = 14, padT = 20, padB = 30;
+  const innerW = chartW - padL - padR;
+  const innerH = chartH - padT - padB;
+  
+  const coords = points.map((p, i) => {
+    const x = padL + (innerW * i) / (points.length - 1);
+    const y = padT + innerH * (1 - p.score / 100);
+    return { x, y, ...p };
+  });
+
+  const pathD = coords.map((c, i) => (i === 0 ? "M" : "L") + c.x.toFixed(1) + "," + c.y.toFixed(1)).join(" ");
+  const areaD = pathD + ` L ${coords[coords.length - 1].x.toFixed(1)},${chartH - padB} L ${coords[0].x.toFixed(1)},${chartH - padB} Z`;
+
+  return `
+    <header class="top-header">
+      <div class="page-title-group">
+        <h2>Student Performance & Readiness <span class="am" style="font-size:18px; color:var(--gold);">የውጤት ዳሽቦርድ</span></h2>
+        <p>Personalized analytics based on mock exams, quizzes, and learning checkpoints.</p>
+      </div>
+
+      <div class="top-actions">
+        <div class="stream-toggle">
+          <button type="button" class="stream-btn ${appState.activeStream === 'natural' ? 'active' : ''}" onclick="setStream('natural')">Natural Science</button>
+          <button type="button" class="stream-btn ${appState.activeStream === 'social' ? 'active' : ''}" onclick="setStream('social')">Social Science</button>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="startQuickCheckpoint()">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Take Quick Mock
+        </button>
+      </div>
+    </header>
+
+    <!-- Top Key Metrics Cards -->
+    <div class="dashboard-metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Exam Readiness</div>
+        <div class="metric-value" style="color:var(--primary);">${data.readiness}%</div>
+        <div class="metric-sub" style="color:var(--primary);">
+          <span>▲ +4.2%</span> from last week
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Projected EUEE Score</div>
+        <div class="metric-value" style="color:var(--gold);">${data.predictedScore} <span style="font-size:16px; color:var(--text-dim); font-weight:500;">/ 700</span></div>
+        <div class="metric-sub" style="color:var(--text-secondary);">University Entrance Target: 450+</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Tests Completed</div>
+        <div class="metric-value">${data.totalTests}</div>
+        <div class="metric-sub" style="color:var(--text-secondary);">Across ${data.subjectBreakdown.length} Core Subjects</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Daily Study Streak</div>
+        <div class="metric-value" style="color:#f97316;">🔥 ${data.streakDays} Days</div>
+        <div class="metric-sub" style="color:var(--text-secondary);">Active revision everyday</div>
+      </div>
+    </div>
+
+    <!-- Alert for Weak Subjects -->
+    <div class="weak-alert-box">
+      <div style="font-size:24px;">⚠️</div>
+      <div style="flex:1;">
+        <h4 style="font-size:15px; font-weight:700; color:#fca5a5; margin-bottom:4px;">Urgent Attention Required in Weak Topics</h4>
+        <p style="font-size:13px; color:#fecaca; margin-bottom:10px;">
+          Your recent checkpoint scores show you are below 60% in <strong>${data.weakTopics.map(t => t.title).join(", ")}</strong>. Reviewing these topics will raise your projected entrance score by an estimated +35 points.
+        </p>
+        <button type="button" class="btn btn-outline" style="border-color:#ef4444; color:#fecaca; padding:6px 14px; font-size:12px;" onclick="openWeakTopicRescue()">
+          Launch Weak Topic Practice Drill →
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Grid: Score Progression & Subject Proficiency -->
+    <div class="dashboard-layout-grid">
+      <!-- Progression Chart -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color:var(--primary);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+            Score Progression Over Sittings (%)
+          </h3>
+          <span style="font-size:12px; color:var(--text-dim);">${streamTitle}</span>
+        </div>
+
+        <div class="chart-container">
+          <svg viewBox="0 0 ${chartW} ${chartH}" style="width:100%; height:100%;">
+            <defs>
+              <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#10b981" stop-opacity="0.0"/>
+              </linearGradient>
+            </defs>
+            <!-- Gridlines -->
+            <line x1="${padL}" y1="${padT}" x2="${chartW - padR}" y2="${padT}" stroke="#223b30" stroke-dasharray="3,3"/>
+            <text x="6" y="${padT + 4}" fill="#64748b" font-size="11">100%</text>
+            
+            <line x1="${padL}" y1="${padT + innerH / 2}" x2="${chartW - padR}" y2="${padT + innerH / 2}" stroke="#223b30" stroke-dasharray="3,3"/>
+            <text x="14" y="${padT + innerH / 2 + 4}" fill="#64748b" font-size="11">50%</text>
+
+            <line x1="${padL}" y1="${chartH - padB}" x2="${chartW - padR}" y2="${chartH - padB}" stroke="#223b30"/>
+            <text x="22" y="${chartH - padB + 4}" fill="#64748b" font-size="11">0%</text>
+
+            <!-- Area fill -->
+            <path d="${areaD}" fill="url(#chartGrad)"/>
+            <!-- Line -->
+            <path d="${pathD}" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+
+            <!-- Data Dots -->
+            ${coords.map(c => `
+              <circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="4" fill="#052014" stroke="#10b981" stroke-width="2.5"/>
+              <text x="${c.x.toFixed(1)}" y="${chartH - 8}" text-anchor="middle" fill="#94a3b8" font-size="11">${c.date}</text>
+              <text x="${c.x.toFixed(1)}" y="${(c.y - 8).toFixed(1)}" text-anchor="middle" fill="#f0fdf4" font-weight="700" font-size="11">${c.score}%</text>
+            `).join("")}
+          </svg>
+        </div>
+      </div>
+
+      <!-- Subject Proficiency Breakdown -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Subject Mastery</h3>
+          <span style="font-size:12px; color:var(--text-dim);">Pass threshold: 60%</span>
+        </div>
+
+        <div>
+          ${data.subjectBreakdown.map(sb => `
+            <div class="subject-progress-row">
+              <span style="font-size:13.5px; font-weight:600;">${sb.subject}</span>
+              <div class="progress-track">
+                <div class="progress-bar-fill ${sb.status}" style="width: ${sb.accuracy}%;"></div>
+              </div>
+              <span style="font-size:13.5px; font-weight:700; text-align:right; color:${sb.status === 'strong' ? 'var(--primary)' : sb.status === 'weak' ? 'var(--danger)' : 'var(--gold)'};">${sb.accuracy}%</span>
+            </div>
+          `).join("")}
+        </div>
+
+        <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border); font-size:12px; color:var(--text-dim); display:flex; justify-content:space-between;">
+          <span>🟢 ≥75% Strong</span>
+          <span>🟡 60-74% Developing</span>
+          <span>🔴 &lt;60% Needs Work</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations & Quick Action Banners -->
+    <div class="card" style="background:linear-gradient(135deg, #13271d 0%, var(--bg-surface) 100%); border-color:rgba(16, 185, 129, 0.3);">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--gold); font-weight:700;">AI Recommended Study Plan Today</span>
+          <h3 style="font-size:18px; font-weight:800; margin-top:4px;">Mastering Unit 2 Physics & Calculus Derivatives</h3>
+          <p style="font-size:13px; color:var(--text-secondary); margin-top:2px;">Complete 1 video lesson, read Chapter 2 summary, and solve 5 sample national exam questions.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="btn btn-outline" onclick="setView('video')">Watch Video</button>
+          <button type="button" class="btn btn-primary" onclick="setView('assistant')">Ask AI Assistant</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* -------------------------------------------------------------
+   RENDER: 2. DIGITAL LIBRARY
+------------------------------------------------------------- */
+function renderLibrary() {
+  let books = DIGITAL_BOOKS.filter(b => {
+    const streamMatch = b.stream === "both" || b.stream === appState.activeStream;
+    const subjectMatch = appState.selectedSubject === "all" || b.subject === appState.selectedSubject;
+    const query = appState.searchQuery.toLowerCase().trim();
+    const queryMatch = !query || 
+      b.title.toLowerCase().includes(query) || 
+      b.amharic.toLowerCase().includes(query) || 
+      b.subject.toLowerCase().includes(query) ||
+      b.summary.toLowerCase().includes(query);
+    return streamMatch && subjectMatch && queryMatch;
+  });
+
+  const subjects = [...new Set(DIGITAL_BOOKS.filter(b => b.stream === "both" || b.stream === appState.activeStream).map(b => b.subject))];
+
+  return `
+    <header class="top-header">
+      <div class="page-title-group">
+        <h2>Digital Library <span class="am" style="font-size:18px; color:var(--gold);">ዲጂታል ቤተ-መጽሐፍት</span></h2>
+        <p>Official Ethiopian Grade 12 textbooks, reference handbooks, and PDF revision units.</p>
+      </div>
+
+      <div class="top-actions">
+        <div class="stream-toggle">
+          <button type="button" class="stream-btn ${appState.activeStream === 'natural' ? 'active' : ''}" onclick="setStream('natural')">Natural Science</button>
+          <button type="button" class="stream-btn ${appState.activeStream === 'social' ? 'active' : ''}" onclick="setStream('social')">Social Science</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Search & Subject Filters -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="search" class="search-input" placeholder="Search textbooks, summaries, or units in English or Amharic..." value="${escapeHtml(appState.searchQuery)}" oninput="appState.searchQuery=this.value; render();">
+      </div>
+
+      <div class="chip-group">
+        <button type="button" class="filter-chip ${appState.selectedSubject === 'all' ? 'active' : ''}" onclick="appState.selectedSubject='all'; render();">All Subjects</button>
+        ${subjects.map(s => `
+          <button type="button" class="filter-chip ${appState.selectedSubject === s ? 'active' : ''}" onclick="appState.selectedSubject='${s}'; render();">${s}</button>
+        `).join("")}
+      </div>
+    </div>
+
+    <!-- Book Grid -->
+    <div class="library-grid">
+      ${books.map(b => `
+        <div class="book-card">
+          <div class="book-cover" style="background: linear-gradient(135deg, ${b.coverColor}, #0a1410);">
+            <div class="book-cover-badge">${b.badge}</div>
+            <div class="book-icon-wrapper">
+              <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            </div>
+          </div>
+
+          <div class="book-body">
+            <div class="book-meta">
+              <span class="subject-pill">${b.subject}</span>
+              <span>•</span>
+              <span>${b.pages} pages</span>
+              <span>•</span>
+              <span style="color:var(--gold);">★ ${b.rating}</span>
+            </div>
+
+            <h3 class="book-title">${b.title}</h3>
+            <div class="book-title-am">${b.amharic}</div>
+            <p class="book-desc">${b.summary}</p>
+
+            <div class="book-actions">
+              <button type="button" class="btn btn-outline" onclick="openBookReader('${b.id}')">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                Read Online
+              </button>
+              <button type="button" class="btn btn-primary" onclick="downloadBookSummary('${b.id}')">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+/* -------------------------------------------------------------
+   RENDER: 3. VIDEO LEARNING
+------------------------------------------------------------- */
+function renderVideo() {
+  const activeVideo = VIDEO_LESSONS.find(v => v.id === appState.activeVideoId) || VIDEO_LESSONS[0];
+
+  return `
+    <header class="top-header">
+      <div class="page-title-group">
+        <h2>Video Lessons & Teacher Tutorials <span class="am" style="font-size:18px; color:var(--gold);">የቪዲዮ ትምህርት</span></h2>
+        <p>Curriculum-aligned masterclasses by experienced Ethiopian educators with chapter timestamps.</p>
+      </div>
+
+      <div class="top-actions">
+        <div class="stream-toggle">
+          <button type="button" class="stream-btn ${appState.activeStream === 'natural' ? 'active' : ''}" onclick="setStream('natural')">Natural Science</button>
+          <button type="button" class="stream-btn ${appState.activeStream === 'social' ? 'active' : ''}" onclick="setStream('social')">Social Science</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="video-layout">
+      <!-- Left: Big Player & Lesson Details -->
+      <div>
+        <div class="player-container">
+          <div class="player-screen">
+            <button type="button" class="play-trigger" onclick="togglePlayVideo()">
+              <svg width="34" height="34" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <h3 style="font-size:20px; font-weight:800; max-width:80%; margin-bottom:6px;">${activeVideo.title}</h3>
+            <p style="color:var(--gold); font-family:'Noto Sans Ethiopic', Nyala, sans-serif; font-size:15px;">${activeVideo.amharic}</p>
+            <span style="font-size:12px; color:var(--text-secondary); margin-top:8px;">Instructor: ${activeVideo.instructor}</span>
+
+            <!-- Controls overlay -->
+            <div class="player-controls">
+              <button type="button" style="background:none; color:white;" onclick="togglePlayVideo()">
+                <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+              <div class="player-scrub">
+                <div class="player-scrub-fill"></div>
+              </div>
+              <span style="font-size:12px; color:white; font-variant-numeric:tabular-nums;">09:14 / ${activeVideo.duration}</span>
+              <span style="font-size:11px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.2); color:white;">1080p HD</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Metadata & Teacher Profile -->
+        <div class="card" style="margin-top:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; flex-wrap:wrap; gap:12px;">
+            <div>
+              <span class="badge-pill" style="margin-left:0; margin-bottom:6px; display:inline-block;">${activeVideo.subject} • ${activeVideo.units}</span>
+              <h2 style="font-size:22px; font-weight:800;">${activeVideo.title}</h2>
+              <div style="color:var(--gold); font-family:'Noto Sans Ethiopic', Nyala, sans-serif; font-size:14px; margin-top:2px;">${activeVideo.amharic}</div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn btn-outline" onclick="askAiAboutVideo('${activeVideo.id}')">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                Ask MELA AI
+              </button>
+              <button type="button" class="btn btn-primary" onclick="startPracticeForVideo('${activeVideo.id}')">
+                Practice This Topic
+              </button>
+            </div>
+          </div>
+
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-bottom:18px;">
+            ${activeVideo.summary}
+          </p>
+
+          <h4 style="font-size:14px; font-weight:700; margin-bottom:10px; color:var(--primary);">Chapter Timestamps</h4>
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:8px;">
+            ${activeVideo.chapters.map(c => `
+              <div style="background:var(--bg-surface-elevated); padding:8px 12px; border-radius:var(--radius-sm); border:1px solid var(--border); display:flex; align-items:center; gap:8px; font-size:12.5px;">
+                <span style="color:var(--primary); font-weight:700; font-variant-numeric:tabular-nums;">${c.time}</span>
+                <span style="color:var(--text-primary); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${c.title}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Playlist -->
+      <div class="playlist-card">
+        <div class="playlist-header">
+          <h3 style="font-size:16px; font-weight:700;">Grade 12 Video Series</h3>
+          <span style="font-size:12px; color:var(--text-secondary);">${VIDEO_LESSONS.length} masterclasses available</span>
+        </div>
+
+        <div class="playlist-items">
+          ${VIDEO_LESSONS.map((v, i) => `
+            <button type="button" class="playlist-item ${v.id === appState.activeVideoId ? 'active' : ''}" onclick="appState.activeVideoId='${v.id}'; render();">
+              <div class="playlist-thumb">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+              <div class="playlist-item-info">
+                <h4>${v.title}</h4>
+                <span>${v.subject} • ${v.duration}</span>
+              </div>
+            </button>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* -------------------------------------------------------------
+   RENDER: 4. MELA AI ASSISTANT (BILINGUAL TUTOR)
+------------------------------------------------------------- */
+function renderAssistant() {
+  const quickPrompts = [
+    { title: "Solve Quadratic: x² - 5x + 6 = 0", am: "የኳድራቲክ እኩልታ ደረጃ በደረጃ ስሌት", prompt: "Explain how to solve x² - 5x + 6 = 0 step-by-step with the discriminant formula." },
+    { title: "What is Newton's Second Law?", am: "የኒውተን 2ኛ ሕግ በአማርኛ", prompt: "Explain Newton's Second Law of Motion in simple Amharic with an example." },
+    { title: "Calculate pH of 0.001M HCl", am: "የ0.001M HCl ፒኤች ስሌት", prompt: "How do you calculate the pH of 0.001 M hydrochloric acid?" },
+    { title: "Importance of the Battle of Adwa", am: "የአድዋ ጦርነት የታሪክ ፋይዳ", prompt: "Summarize the significance of the Battle of Adwa in 1896 for Grade 12 History." },
+    { title: "Photosynthesis: Light vs Dark Stage", am: "የፎቶሲንተሲስ ደረጃዎች", prompt: "What happens during the light-dependent stage of photosynthesis?" }
+  ];
+
+  return `
+    <header class="top-header" style="margin-bottom:16px;">
+      <div class="page-title-group">
+        <h2>MELA AI Study Assistant <span class="am" style="font-size:18px; color:var(--gold);">መላ AI ረዳት</span></h2>
+        <p>Instant academic explanations in English and Amharic for Ethiopian Grade 12 students.</p>
+      </div>
+    </header>
+
+    <div class="ai-assistant-container">
+      <!-- AI Sidebar Quick Prompts -->
+      <div class="ai-sidebar">
+        <h4 style="font-size:13px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-secondary); font-weight:700;">Curriculum Prompts</h4>
+        
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          ${quickPrompts.map(p => `
+            <button type="button" class="ai-preset-btn" onclick="sendAiPrompt('${escapeHtml(p.prompt)}')">
+              <span>${p.title}</span>
+              <small>${p.am}</small>
+            </button>
+          `).join("")}
+        </div>
+
+        <div style="margin-top:auto; padding:14px; background:var(--bg-surface-elevated); border-radius:var(--radius-md); border:1px solid var(--border);">
+          <span style="font-size:11.5px; color:var(--primary); font-weight:700;">💡 Pro-Tip</span>
+          <p style="font-size:12px; color:var(--text-secondary); margin-top:4px;">You can type formulas or ask questions in pure Amharic (e.g., "የኦም ሕግ ምንድን ነው?").</p>
+        </div>
+      </div>
+
+      <!-- Chat Interface -->
+      <div class="chat-panel">
+        <div class="chat-header">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:10px; height:10px; border-radius:50%; background:var(--primary); box-shadow:0 0 10px var(--primary);"></div>
+            <span style="font-weight:700; font-size:14px;">MELA Tutor 2.0 (Active)</span>
+          </div>
+          <button type="button" class="btn btn-outline" style="padding:4px 10px; font-size:12px;" onclick="clearAiChat()">Clear Conversation</button>
+        </div>
+
+        <div class="chat-messages" id="chatMessagesBox">
+          ${appState.chatMessages.map(msg => `
+            <div class="msg-row ${msg.sender}">
+              <div class="msg-avatar">${msg.sender === 'bot' ? 'M' : 'YOU'}</div>
+              <div class="msg-bubble">${msg.html || escapeHtml(msg.text)}</div>
+            </div>
+          `).join("")}
+        </div>
+
+        <form class="chat-input-bar" onsubmit="handleUserChatSubmit(event)">
+          <input type="text" id="aiChatInput" class="chat-input" placeholder="Ask your Grade 12 academic question in English or Amharic (e.g., solve for x, explain meiosis)..." autocomplete="off">
+          <button type="submit" class="btn btn-primary" style="padding:0 22px;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+/* -------------------------------------------------------------
+   RENDER: 5. NATIONAL EXAM PREPARATION (EUEE MOCKS)
+------------------------------------------------------------- */
+function renderExam() {
+  if (appState.activeExam) {
+    return renderActiveExamArena();
+  }
+
+  const packages = EXAM_PACKAGES.filter(p => p.stream === appState.activeStream);
+
+  return `
+    <header class="top-header">
+      <div class="page-title-group">
+        <h2>Ethiopian University Entrance Exam (EUEE) Prep <span class="am" style="font-size:18px; color:var(--gold);">የ12ኛ ክፍል ፈተና ዝግጅት</span></h2>
+        <p>Timed mock examinations, past national examination papers, and automatic answer checking.</p>
+      </div>
+
+      <div class="top-actions">
+        <div class="stream-toggle">
+          <button type="button" class="stream-btn ${appState.activeStream === 'natural' ? 'active' : ''}" onclick="setStream('natural')">Natural Science</button>
+          <button type="button" class="stream-btn ${appState.activeStream === 'social' ? 'active' : ''}" onclick="setStream('social')">Social Science</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="exam-setup-grid">
+      ${packages.map(p => `
+        <div class="exam-package-card">
+          <div class="exam-package-badge">${p.year} • ${p.category}</div>
+          <h3 class="exam-package-title">${p.title}</h3>
+          <div style="color:var(--gold); font-family:'Noto Sans Ethiopic', Nyala, sans-serif; font-size:13.5px;">${p.amharic}</div>
+          <div class="exam-package-meta">
+            <span>⏱ ${p.durationMinutes} Minutes</span>
+            <span>•</span>
+            <span>📝 ${p.questions.length} Selected Questions</span>
+          </div>
+          <p style="font-size:13px; color:var(--text-secondary); line-height:1.5;">
+            Simulated authentic entrance examination testing your mastery of standard curriculum concepts with detailed rationale for every answer.
+          </p>
+          <button type="button" class="btn btn-primary" style="margin-top:auto;" onclick="launchExamSession('${p.id}')">
+            Start Timed Examination →
+          </button>
+        </div>
+      `).join("")}
+
+      <!-- Custom Topic Drill Card -->
+      <div class="exam-package-card" style="border-style:dashed; border-color:var(--border-light); background:var(--bg-surface-elevated);">
+        <div class="exam-package-badge" style="background:var(--primary-dim); color:var(--primary); border-color:var(--primary);">Adaptive Drill</div>
+        <h3 class="exam-package-title">Weak Topic Diagnostic Drill</h3>
+        <p style="font-size:13px; color:var(--text-secondary);">
+          Our AI algorithm selects questions exclusively from topics where your recent accuracy has fallen below the 60% mark.
+        </p>
+        <button type="button" class="btn btn-gold" style="margin-top:auto;" onclick="openWeakTopicRescue()">
+          Begin Diagnostic Test
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderActiveExamArena() {
+  const exam = appState.activeExam;
+  const q = exam.questions[appState.currentQuestionIndex];
+  const selectedChoice = appState.userExamAnswers[q.id];
+
+  if (appState.examFinished) {
+    return renderExamReview();
+  }
+
+  const minutes = Math.floor(appState.examSecondsRemaining / 60);
+  const seconds = appState.examSecondsRemaining % 60;
+  const timeFormatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  const isUrgent = appState.examSecondsRemaining < 120;
+
+  return `
+    <header class="top-header" style="margin-bottom:16px;">
+      <div>
+        <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--gold); font-weight:700;">Active National Examination</div>
+        <h2 style="font-size:22px;">${exam.title}</h2>
+      </div>
+      <button type="button" class="btn btn-outline" style="border-color:var(--danger); color:var(--danger);" onclick="confirmSubmitExam()">
+        End & Submit Exam
+      </button>
+    </header>
+
+    <div class="exam-arena">
+      <!-- Main Question Stage -->
+      <div class="exam-stage">
+        <div class="exam-question-header">
+          <div>
+            <span class="badge-pill" style="margin-left:0;">${q.subject}</span>
+            <span style="font-size:12px; color:var(--text-dim); margin-left:8px;">${q.topic}</span>
+          </div>
+          <span style="font-size:14px; font-weight:700; color:var(--text-secondary);">Question ${appState.currentQuestionIndex + 1} of ${exam.questions.length}</span>
+        </div>
+
+        <div class="exam-stem">${q.stem}</div>
+
+        <div class="choices-list">
+          ${q.choices.map((c, i) => {
+            const letter = String.fromCharCode(65 + i);
+            const isSelected = selectedChoice === i;
+            return `
+              <button type="button" class="choice-item ${isSelected ? 'selected' : ''}" onclick="selectExamAnswer('${q.id}', ${i})">
+                <div class="choice-letter">${letter}</div>
+                <div class="choice-text">${c}</div>
+              </button>
+            `;
+          }).join("")}
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:18px;">
+          <button type="button" class="btn btn-outline" ${appState.currentQuestionIndex === 0 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''} onclick="navigateExamQuestion(-1)">
+            ← Previous Question
+          </button>
+          
+          ${appState.currentQuestionIndex < exam.questions.length - 1 ? `
+            <button type="button" class="btn btn-primary" onclick="navigateExamQuestion(1)">
+              Next Question →
+            </button>
+          ` : `
+            <button type="button" class="btn btn-gold" onclick="finishExamSession()">
+              Submit & View Results
+            </button>
+          `}
+        </div>
+      </div>
+
+      <!-- Right: Palette & Timer -->
+      <div class="exam-sidebar-nav">
+        <div class="exam-timer-box">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim); margin-bottom:4px;">Time Remaining</div>
+          <div class="timer-display ${isUrgent ? 'urgent' : ''}">${timeFormatted}</div>
+        </div>
+
+        <div>
+          <h4 style="font-size:13px; font-weight:700; margin-bottom:10px;">Question Navigator</h4>
+          <div class="question-palette">
+            ${exam.questions.map((item, idx) => {
+              const isAnswered = appState.userExamAnswers[item.id] !== undefined;
+              const isCurrent = idx === appState.currentQuestionIndex;
+              return `
+                <button type="button" class="palette-node ${isCurrent ? 'current' : ''} ${isAnswered ? 'answered' : ''}" onclick="jumpToExamQuestion(${idx})">
+                  ${idx + 1}
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </div>
+
+        <div style="padding-top:12px; border-top:1px solid var(--border); font-size:11.5px; color:var(--text-dim); display:flex; flex-direction:column; gap:4px;">
+          <div><span style="color:var(--primary);">■</span> Answered</div>
+          <div><span style="color:var(--gold);">■</span> Current Item</div>
+          <div><span style="color:var(--text-dim);">■</span> Unanswered</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderExamReview() {
+  const exam = appState.activeExam;
+  let correctCount = 0;
+  exam.questions.forEach(q => {
+    if (appState.userExamAnswers[q.id] === q.answer) correctCount++;
+  });
+
+  const percentage = Math.round((correctCount / exam.questions.length) * 100);
+  const passed = percentage >= 60;
+
+  return `
+    <header class="top-header">
+      <div>
+        <span class="badge-pill" style="margin-left:0; background:${passed ? 'var(--primary)' : 'var(--danger)'}; color:white;">
+          ${passed ? 'PASSED · ብቁ' : 'NEEDS REVISION'}
+        </span>
+        <h2 style="font-size:26px; margin-top:6px;">Examination Result: ${correctCount} of ${exam.questions.length} Correct (${percentage}%)</h2>
+        <p style="color:var(--text-secondary); font-size:14px;">Results have been compiled into your progress record.</p>
+      </div>
+
+      <div class="top-actions">
+        <button type="button" class="btn btn-outline" onclick="exitExamReview()">Return to Exams</button>
+        <button type="button" class="btn btn-primary" onclick="setView('dashboard')">View on Dashboard</button>
+      </div>
+    </header>
+
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      ${exam.questions.map((q, idx) => {
+        const userAnswer = appState.userExamAnswers[q.id];
+        const isCorrect = userAnswer === q.answer;
+        return `
+          <div class="card" style="border-left:4px solid ${isCorrect ? 'var(--primary)' : 'var(--danger)'};">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+              <span style="font-size:12.5px; font-weight:700; color:var(--text-secondary);">${q.subject} • ${q.topic}</span>
+              <span class="badge-pill" style="background:${isCorrect ? 'var(--primary-dim)' : 'var(--danger-dim)'}; color:${isCorrect ? 'var(--primary)' : 'var(--danger)'};">
+                ${isCorrect ? '✓ Correct' : '✕ Incorrect'}
+              </span>
+            </div>
+
+            <h4 style="font-size:16px; font-weight:700; margin-bottom:14px;">${idx + 1}. ${q.stem}</h4>
+
+            <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:14px;">
+              ${q.choices.map((c, ci) => {
+                const isSelected = userAnswer === ci;
+                const isTheRightAnswer = q.answer === ci;
+                let bg = "var(--bg-surface-elevated)";
+                let border = "var(--border)";
+                let badge = "";
+
+                if (isTheRightAnswer) {
+                  bg = "var(--primary-dim)";
+                  border = "var(--primary)";
+                  badge = "✓ Correct Answer";
+                } else if (isSelected) {
+                  bg = "var(--danger-dim)";
+                  border = "var(--danger)";
+                  badge = "✕ Your Selection";
+                }
+
+                return `
+                  <div style="padding:10px 14px; border-radius:var(--radius-sm); background:${bg}; border:1px solid ${border}; display:flex; justify-content:space-between; align-items:center; font-size:13.5px;">
+                    <span><strong>${String.fromCharCode(65 + ci)}.</strong> ${c}</span>
+                    <span style="font-size:11px; font-weight:700;">${badge}</span>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+
+            <div style="padding:12px 14px; background:rgba(0,0,0,0.25); border-radius:var(--radius-sm); font-size:13px; color:var(--text-secondary);">
+              <strong style="color:var(--gold);">Explanation & Solution: </strong>
+              ${q.explanation}
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+/* -------------------------------------------------------------
+   RENDER: 6. SMART DICTIONARY
+------------------------------------------------------------- */
+function renderDictionary() {
+  const filter = appState.dictionaryFilter.toLowerCase().trim();
+  const words = SMART_DICTIONARY.filter(w => {
+    return !filter || 
+      w.word.toLowerCase().includes(filter) || 
+      w.amharic.toLowerCase().includes(filter) ||
+      w.subject.toLowerCase().includes(filter) ||
+      w.definition.toLowerCase().includes(filter);
+  });
+
+  const selectedItem = SMART_DICTIONARY.find(w => w.word === appState.selectedWord) || words[0] || SMART_DICTIONARY[0];
+
+  return `
+    <header class="top-header">
+      <div class="page-title-group">
+        <h2>Smart Bilingual Dictionary <span class="am" style="font-size:18px; color:var(--gold);">ስማርት መዝገበ-ቃላት</span></h2>
+        <p>English–Amharic academic terminology across all Grade 12 STEM & Social Science subjects.</p>
+      </div>
+    </header>
+
+    <div class="dictionary-split">
+      <!-- Left: Search & Word List -->
+      <div>
+        <div class="search-box" style="margin-bottom:12px;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="search" class="search-input" placeholder="Search word in English or ፊደል..." value="${escapeHtml(appState.dictionaryFilter)}" oninput="appState.dictionaryFilter=this.value; render();">
+        </div>
+
+        <div class="word-list">
+          ${words.map(w => `
+            <button type="button" class="word-card-btn ${w.word === appState.selectedWord ? 'active' : ''}" onclick="appState.selectedWord='${w.word}'; render();">
+              <div class="word-card-top">
+                <span class="word-english">${w.word}</span>
+                <span class="word-amharic">${w.amharic}</span>
+              </div>
+              <small style="color:var(--text-dim); font-size:11.5px;">${w.subject}</small>
+            </button>
+          `).join("")}
+        </div>
+      </div>
+
+      <!-- Right: Detailed Word Definition & Pronunciation Card -->
+      <div class="word-detail-panel">
+        <div class="word-detail-header">
+          <span class="badge-pill" style="margin-left:0; margin-bottom:8px;">${selectedItem.subject}</span>
+          <h1 class="word-detail-title">${selectedItem.word}</h1>
+          <div class="word-detail-amharic">${selectedItem.amharic}</div>
+          <div style="display:flex; align-items:center; gap:12px; margin-top:8px;">
+            <div class="phonetic-badge">${selectedItem.phonetic}</div>
+            <button type="button" class="btn btn-outline" style="padding:4px 10px; font-size:12px;" onclick="speakWord('${selectedItem.word}')">
+              🔊 Pronounce English
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:24px;">
+          <h3 style="font-size:15px; font-weight:700; color:var(--primary); margin-bottom:6px;">Academic Definition</h3>
+          <p style="font-size:15px; color:var(--text-primary); line-height:1.6;">${selectedItem.definition}</p>
+        </div>
+
+        <div style="background:var(--bg-surface-elevated); border:1px solid var(--border); border-radius:var(--radius-md); padding:18px; margin-bottom:24px;">
+          <h4 style="font-size:13px; font-weight:700; color:var(--gold); margin-bottom:6px;">Curriculum Usage Example</h4>
+          <p style="font-size:14px; color:var(--text-primary); margin-bottom:8px; font-style:italic;">"${selectedItem.example}"</p>
+          <p style="font-size:13.5px; color:var(--gold); font-family:'Noto Sans Ethiopic', Nyala, sans-serif;">"${selectedItem.amharicExample}"</p>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="askAiToDeepenWord('${selectedItem.word}')">
+          Ask MELA AI to generate 3 exam questions using "${selectedItem.word}"
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+/* =====================================================================
+   MAIN RENDER DISPATCHER
+===================================================================== */
+function render() {
+  const container = document.getElementById("appMain");
+  if (!container) return;
+
+  switch (appState.currentView) {
+    case "dashboard":
+      container.innerHTML = renderDashboard();
+      break;
+    case "library":
+      container.innerHTML = renderLibrary();
+      break;
+    case "video":
+      container.innerHTML = renderVideo();
+      break;
+    case "assistant":
+      container.innerHTML = renderAssistant();
+      scrollToChatBottom();
+      break;
+    case "exam":
+      container.innerHTML = renderExam();
+      break;
+    case "dictionary":
+      container.innerHTML = renderDictionary();
+      break;
+    default:
+      container.innerHTML = renderDashboard();
+  }
+}
+
+/* =====================================================================
+   INTERACTION HANDLERS & SIMULATIONS
+===================================================================== */
+
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function openBookReader(bookId) {
+  const book = DIGITAL_BOOKS.find(b => b.id === bookId);
+  if (!book) return;
+
+  const modal = document.getElementById("modalContainer");
+  modal.innerHTML = `
+    <div class="modal-overlay" onclick="closeModal(event)">
+      <div class="modal-dialog" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:16px;">
+          <div>
+            <span class="badge-pill" style="margin-left:0;">${book.badge}</span>
+            <h2 style="font-size:22px; font-weight:800; margin-top:4px;">${book.title}</h2>
+            <div style="color:var(--gold); font-family:'Noto Sans Ethiopic', Nyala, sans-serif;">${book.amharic}</div>
+          </div>
+          <button type="button" class="btn btn-outline" style="padding:6px 12px;" onclick="closeModal(null)">✕ Close</button>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <h4 style="font-size:14px; font-weight:700; margin-bottom:8px; color:var(--primary);">Unit Overview & Contents</h4>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            ${book.units.map((u, i) => `
+              <div style="background:var(--bg-surface-elevated); padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:13.5px; display:flex; justify-content:space-between;">
+                <span>${u}</span>
+                <span style="color:var(--text-dim); font-size:12px;">Unit ${i + 1}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <div style="background:var(--bg-surface-card); border-radius:var(--radius-md); padding:16px; border:1px solid var(--border); margin-bottom:24px;">
+          <h4 style="font-size:13px; font-weight:700; color:var(--text-gold); margin-bottom:4px;">Study Summary</h4>
+          <p style="font-size:13px; color:var(--text-secondary); line-height:1.5;">${book.summary}</p>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" class="btn btn-outline" onclick="closeModal(null)">Dismiss</button>
+          <button type="button" class="btn btn-primary" onclick="downloadBookSummary('${book.id}')">Download Text Notes (.txt)</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function closeModal(e) {
+  if (e && e.target && !e.target.classList.contains("modal-overlay")) return;
+  document.getElementById("modalContainer").innerHTML = "";
+}
+
+function downloadBookSummary(bookId) {
+  const book = DIGITAL_BOOKS.find(b => b.id === bookId);
+  if (!book) return;
+
+  const content = `=====================================================
+MELA (መላ) - ETHIOPIAN GRADE 12 CURRICULUM NOTES
+=====================================================
+Title: ${book.title}
+Amharic: ${book.amharic}
+Subject: ${book.subject}
+Stream: ${book.stream}
+Publisher / Author: ${book.author}
+-----------------------------------------------------
+SYLLABUS UNITS:
+${book.units.map((u, i) => `${i + 1}. ${u}`).join("\n")}
+
+SUMMARY:
+${book.summary}
+
+Prepared for Ethiopian University Entrance Examination (EUEE).
+https://mela.edu.et
+=====================================================`;
+
+  const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `MELA-Grade12-${book.id}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function togglePlayVideo() {
+  appState.videoPlaying = !appState.videoPlaying;
+  alert(appState.videoPlaying ? "Playing Grade 12 Video Lesson with Amharic-English Subtitles..." : "Video Paused.");
+}
+
+function askAiAboutVideo(vidId) {
+  const vid = VIDEO_LESSONS.find(v => v.id === vidId);
+  if (!vid) return;
+  setView("assistant");
+  sendAiPrompt(`Can you summarize the key formulas and EUEE exam traps from the lesson "${vid.title}"?`);
+}
+
+function startPracticeForVideo(vidId) {
+  const vid = VIDEO_LESSONS.find(v => v.id === vidId);
+  launchExamSession(appState.activeStream === "natural" ? "euee-2016-nat" : "euee-2015-soc");
+}
+
+/* AI Chat Logic */
+function handleUserChatSubmit(e) {
+  e.preventDefault();
+  const input = document.getElementById("aiChatInput");
+  const text = input.value.trim();
+  if (!text) return;
+
+  appState.chatMessages.push({ sender: "user", text, time: "Just now" });
+  input.value = "";
+  render();
+
+  setTimeout(() => {
+    generateAiResponse(text);
+  }, 600);
+}
+
+function sendAiPrompt(promptText) {
+  appState.chatMessages.push({ sender: "user", text: promptText, time: "Just now" });
+  setView("assistant");
+  setTimeout(() => {
+    generateAiResponse(promptText);
+  }, 600);
+}
+
+function clearAiChat() {
+  appState.chatMessages = [
+    {
+      sender: "bot",
+      text: "Chat cleared! How can I assist your Grade 12 exam revision right now?",
+      time: "Just now"
+    }
+  ];
+  render();
+}
+
+function generateAiResponse(userQuery) {
+  const q = userQuery.toLowerCase();
+  let botHtml = "";
+
+  if (q.includes("quadratic") || q.includes("x²") || q.includes("እኩልታ")) {
+    botHtml = `
+      <p>Here is the step-by-step resolution for a quadratic equation <strong>ax² + bx + c = 0</strong>:</p>
+      <div class="step-box">
+        <h5>ደረጃ 1: Discriminant ማስላት (D = b² - 4ac)</h5>
+        <p>For x² - 5x + 6 = 0: a = 1, b = -5, c = 6.<br>D = (-5)² - 4(1)(6) = 25 - 24 = <strong>1</strong>.</p>
+      </div>
+      <div class="step-box">
+        <h5>ደረጃ 2: ኳድራቲክ ፎርሙላን መጠቀም</h5>
+        <p>x = (-b ± √D) / 2a = (5 ± √1) / 2 = (5 ± 1) / 2.</p>
+      </div>
+      <div class="step-box">
+        <h5>ደረጃ 3: የመጨረሻ መልስ (Roots)</h5>
+        <p>x₁ = (5 + 1)/2 = <strong>3</strong><br>x₂ = (5 - 1)/2 = <strong>2</strong>.<br>The real roots are <strong>x = 2 or x = 3</strong>.</p>
+      </div>
+      <p style="color:var(--gold); font-size:12.5px;">💡 EUEE Tip: Always test if the roots multiply to 'c/a' (2*3=6) and add to '-b/a' (2+3=5).</p>
+    `;
+  } else if (q.includes("newton") || q.includes("ኒውተን") || q.includes("force")) {
+    botHtml = `
+      <p><strong>የኒውተን ሁለተኛ የእንቅስቃሴ ሕግ (Newton's Second Law of Motion):</strong></p>
+      <div class="step-box">
+        <h5>መሰረታዊ ቀመር (Formula)</h5>
+        <p><strong>ΣF = m · a</strong><br>(Net Force = Mass × Acceleration)</p>
+      </div>
+      <div class="step-box">
+        <h5>ትርጓሜ በአማርኛ</h5>
+        <p>በአንድ አካል ላይ የሚያርፈው ጥምር ኃይል (Net Force) የአካሉን ፍጥነት ይቀይራል (ያፈጥነዋል)። ኃይሉ ሲጨምር ፍጥንጥነቱ ይጨምራል፤ ክብደቱ (Mass) ሲጨምር ግን ፍጥንጥነቱ ይቀንሳል።</p>
+      </div>
+      <div class="step-box">
+        <h5>የፈተና ምሳሌ (EUEE Exam Example)</h5>
+        <p>A 5 kg block accelerates at 2 m/s².<br>Net force F = 5 kg × 2 m/s² = <strong>10 Newtons</strong>.</p>
+      </div>
+    `;
+  } else if (q.includes("ph") || q.includes("acid") || q.includes("hcl") || q.includes("አሲድ")) {
+    botHtml = `
+      <p><strong>Calculating pH for a Strong Monoprotic Acid (HCl):</strong></p>
+      <div class="step-box">
+        <h5>ደረጃ 1: የሀይድሮጂን አዮን መጠን (H⁺ concentration)</h5>
+        <p>Since HCl is a strong acid, it dissociates completely: HCl → H⁺ + Cl⁻.<br>Therefore, [H⁺] = 0.001 M = 10⁻³ M.</p>
+      </div>
+      <div class="step-box">
+        <h5>ደረጃ 2: የፒኤች ቀመር (pH formula)</h5>
+        <p>pH = -log₁₀[H⁺] = -log₁₀(10⁻³) = <strong>3.0</strong>.</p>
+      </div>
+      <p style="color:var(--primary); font-size:13px;">Since pH &lt; 7 at 25°C, the solution is strongly acidic!</p>
+    `;
+  } else if (q.includes("adwa") || q.includes("አድዋ") || q.includes("history") || q.includes("1896")) {
+    botHtml = `
+      <p><strong>The Battle of Adwa (የአድዋ ጦርነት - March 1, 1896):</strong></p>
+      <p>Adwa is one of the most prominent topics in Ethiopian Grade 12 History. Key national exam facts to remember:</p>
+      <div class="step-box">
+        <h5>1. ምክንያት (Root Cause)</h5>
+        <p>The deceptive Article XVII of the Treaty of Wuchale (1889), where the Italian version falsely claimed Ethiopia was an Italian protectorate.</p>
+      </div>
+      <div class="step-box">
+        <h5>2. መሪዎች (Key Leaders)</h5>
+        <p>Emperor Menelik II, Empress Taytu Betul, Ras Makonnen, Fitawrari Gebeyehu, and unified forces from all Ethiopian regions.</p>
+      </div>
+      <div class="step-box">
+        <h5>3. ውጤት (Significance)</h5>
+        <p>Total defeat of General Baratieri's Italian invading army; forced Italy to sign the Treaty of Addis Ababa (Oct 1896) recognizing unconditional Ethiopian sovereignty.</p>
+      </div>
+    `;
+  } else {
+    botHtml = `
+      <p>I have processed your query: <em>"${escapeHtml(userQuery)}"</em>.</p>
+      <div class="step-box">
+        <h5>Curriculum Analysis</h5>
+        <p>Based on the Ethiopian Grade 12 National Blueprint, ensure you review both theoretical definitions and mathematical problem applications for this unit.</p>
+      </div>
+      <p style="color:var(--gold); font-size:13px;">Would you like me to generate 3 mock exam questions with choices on this topic?</p>
+    `;
+  }
+
+  appState.chatMessages.push({ sender: "bot", html: botHtml, time: "Just now" });
+  render();
+  scrollToChatBottom();
+}
+
+function scrollToChatBottom() {
+  setTimeout(() => {
+    const box = document.getElementById("chatMessagesBox");
+    if (box) box.scrollTop = box.scrollHeight;
+  }, 50);
+}
+
+function askAiToDeepenWord(word) {
+  setView("assistant");
+  sendAiPrompt(`Give me 3 realistic Ethiopian Grade 12 National Examination multiple-choice questions testing the academic term "${word}".`);
+}
+
+function speakWord(word) {
+  if ('speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  } else {
+    alert(`Pronunciation audio: /${word}/`);
+  }
+}
+
+/* Exam Session Control */
+function launchExamSession(packageId) {
+  const pkg = EXAM_PACKAGES.find(p => p.id === packageId) || EXAM_PACKAGES[0];
+  appState.activeExam = JSON.parse(JSON.stringify(pkg));
+  appState.currentQuestionIndex = 0;
+  appState.userExamAnswers = {};
+  appState.examSecondsRemaining = pkg.durationMinutes * 60;
+  appState.examFinished = false;
+
+  if (appState.examTimerInterval) clearInterval(appState.examTimerInterval);
+  appState.examTimerInterval = setInterval(() => {
+    if (appState.examSecondsRemaining > 0 && !appState.examFinished) {
+      appState.examSecondsRemaining--;
+      renderActiveTimerOnly();
+    } else if (appState.examSecondsRemaining <= 0 && !appState.examFinished) {
+      finishExamSession();
+    }
+  }, 1000);
+
+  setView("exam");
+}
+
+function renderActiveTimerOnly() {
+  const timerEl = document.querySelector(".timer-display");
+  if (!timerEl) return;
+  const m = Math.floor(appState.examSecondsRemaining / 60);
+  const s = appState.examSecondsRemaining % 60;
+  timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  if (appState.examSecondsRemaining < 120) timerEl.classList.add("urgent");
+}
+
+function selectExamAnswer(qId, choiceIndex) {
+  appState.userExamAnswers[qId] = choiceIndex;
+  render();
+}
+
+function navigateExamQuestion(delta) {
+  const newIndex = appState.currentQuestionIndex + delta;
+  if (newIndex >= 0 && newIndex < appState.activeExam.questions.length) {
+    appState.currentQuestionIndex = newIndex;
+    render();
+  }
+}
+
+function jumpToExamQuestion(index) {
+  appState.currentQuestionIndex = index;
+  render();
+}
+
+function confirmSubmitExam() {
+  if (confirm("Are you sure you want to end and submit your examination?")) {
+    finishExamSession();
+  }
+}
+
+function finishExamSession() {
+  if (appState.examTimerInterval) clearInterval(appState.examTimerInterval);
+  appState.examFinished = true;
+  render();
+}
+
+function exitExamReview() {
+  appState.activeExam = null;
+  appState.examFinished = false;
+  render();
+}
+
+function startQuickCheckpoint() {
+  launchExamSession(appState.activeStream === "natural" ? "euee-2016-nat" : "euee-2015-soc");
+}
+
+function openWeakTopicRescue() {
+  launchExamSession(appState.activeStream === "natural" ? "euee-2016-nat" : "euee-2015-soc");
+}
+
+/* Event Delegation for Navigation */
+document.querySelectorAll(".nav-item").forEach(btn => {
+  btn.addEventListener("click", () => {
+    setView(btn.dataset.view);
+  });
+});
+
+// Initialize on page load
+render();
+</script>
+</body>
+</html>
